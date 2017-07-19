@@ -3,8 +3,12 @@ packer templates and scripts
 
 # Running
 ```
-cd xenial 
-packer build -var-file=../variables.json template.json
+# To build both virtualbox & aws
+cd ubuntu/xenial 
+packer build -var-file=../variables.json \
+  -var 'aws_secret_key={{your_secret_key}}' \
+  -var 'aws_access_key={your_access_key_id}}' \
+  template.json
 
 # Or for only virtualbox
 packer build -var-file=../variables.json -only=virtualbox template.json
