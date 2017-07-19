@@ -3,7 +3,7 @@ packer templates and scripts
 
 # Running
 ```
-cd xenial 
+cd ubunt/xenial 
 packer build -var-file=../variables.json template.json
 
 # Or for only virtualbox
