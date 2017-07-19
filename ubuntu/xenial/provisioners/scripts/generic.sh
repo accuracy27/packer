@@ -23,7 +23,6 @@ yes 2>&- | apt-get update
 yes 2>&- | apt-get -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 yes 2>&- | apt-get -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install \
   software-properties-common \
-  linux-image-extra-virtual \
   ntp \
   git \
   bc \
