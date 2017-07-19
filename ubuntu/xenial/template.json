@@ -1,0 +1,104 @@
+{
+  "variables": {
+    "iso_checksum_type": "md5",
+    "iso_checksum": "60f87b577a877baae2aebef619a9da3e",
+    "iso_url": "http://cdimage.ubuntu.com/ubuntu-server/xenial/daily/current/xenial-server-amd64.iso"
+  },
+  "builders": [
+    {
+      "name": "null",
+      "type": "null",
+      "ssh_host": "192.168.99.100",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}"
+    },
+    {
+      "name": "aws",
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "ami_name": "packer-xenial-{{ isotime \"20060102150405\" }}",
+      "ami_description": "packer build {{ isotime \"20060102150405\" }}",
+      "source_ami": "ami-6d48500b",
+      "region": "eu-west-1",
+      "associate_public_ip_address": "true",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ssh_port": "22",
+      "ssh_timeout": "10m",
+      "ssh_private_ip": "false",
+      "tags": {
+        "OS": "Ubuntu",
+        "Release": "Xenial"
+      }
+    },
+    {
+      "name": "virtualbox",
+      "type": "virtualbox-iso",
+      "communicator": "ssh",
+      "guest_os_type": "Ubuntu_64",
+      "ssh_pty" : "false",
+      "guest_additions_mode": "disable",
+      "format": "ovf",
+      "headless": false,
+      "boot_wait": "10s",
+      "ssh_timeout": "20m",
+      "hard_drive_interface": "scsi",
+      "disk_size": "20480",
+      "http_directory": "{{user `http_directory`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--memory", "768"],
+        ["modifyvm", "{{.Name}}", "--cpus", "1"]
+      ],
+      "boot_command": [
+        "<enter><wait><f6><esc>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "/install/vmlinuz",
+        " debian-installer=en_US auto locale=en_US kbd-chooser/method=us",
+        " hostname={{.Name}}",
+        " console-setup/ask_detect=false",
+        " console-setup/layoutcode=us",
+        " console-setup/modelcode=pc105",
+        " debconf/frontend=noninteractive",
+        " debian-installer=en_US",
+        " fb=false",
+        " initrd=/install/initrd.gz",
+        " kbd-chooser/method=us",
+        " keyboard-configuration/layout=USA",
+        " keyboard-configuration/variant=USA",
+        " net.ifnames=0",
+        " packer/httpip={{ .HTTPIP }}",
+        " packer/httpport={{ .HTTPPort }}",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg.{{build_name}}<wait>",
+        " -- <wait>",
+        "<enter><wait>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "provisioners",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "shell",
+      "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -H -E bash '{{ .Path }}'",
+      "inline": [
+        "/tmp/provisioners/scripts/generic.sh",
+        "/tmp/provisioners/scripts/{{build_name}}.sh",
+        "/tmp/provisioners/scripts/finalize_template.sh"
+      ]
+    }
+  ]
+}

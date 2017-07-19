@@ -1,0 +1,16 @@
+*.iso
+*.deb
+*.rpm
+*.7z
+*.dmg
+*.gz
+*.jar
+*.rar
+*.tar
+*.zip
+*.ova
+*.ovf
+*.vdi
+*.vmdk
+*.vhd
+*.DS_Store
