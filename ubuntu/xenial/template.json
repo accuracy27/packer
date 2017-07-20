@@ -44,7 +44,7 @@
       "boot_wait": "10s",
       "ssh_timeout": "20m",
       "hard_drive_interface": "scsi",
-      "disk_size": "20480",
+      "disk_size": "{{user `disk_size`}}",
       "http_directory": "{{user `http_directory`}}",
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
@@ -53,8 +53,8 @@
       "ssh_password": "{{user `ssh_password`}}",
       "shutdown_command": "{{user `shutdown_command`}}",
       "vboxmanage": [
-        ["modifyvm", "{{.Name}}", "--memory", "768"],
-        ["modifyvm", "{{.Name}}", "--cpus", "1"]
+        ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
       ],
       "boot_command": [
         "<enter><wait><f6><esc>",
@@ -94,7 +94,7 @@
       "boot_wait": "10s",
       "ssh_timeout": "20m",
       "disk_interface": "virtio",
-      "disk_size": "20480",
+      "disk_size": "{{user `disk_size`}}",
       "http_directory": "{{user `http_directory`}}",
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
@@ -104,8 +104,8 @@
       "ssh_wait_timeout": "60m",
       "shutdown_command": "{{user `shutdown_command`}}",
       "qemuargs": [
-        [ "-m", "768" ],
-        [ "-smp", "cpus=1"]
+        [ "-m", "{{user `memory`}}" ],
+        [ "-smp", "cpus={{user `cpus`}}"]
       ],
       "boot_command": [
         "<enter><wait><f6><esc>",
