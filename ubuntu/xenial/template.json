@@ -1,7 +1,7 @@
 {
   "variables": {
     "iso_checksum_type": "md5",
-    "iso_checksum": "60f87b577a877baae2aebef619a9da3e",
+    "iso_checksum": "4190f933af34918e1a24c53e1e4cd5e0",
     "iso_url": "http://cdimage.ubuntu.com/ubuntu-server/xenial/daily/current/xenial-server-amd64.iso"
   },
   "builders": [
@@ -55,6 +55,57 @@
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--memory", "768"],
         ["modifyvm", "{{.Name}}", "--cpus", "1"]
+      ],
+      "boot_command": [
+        "<enter><wait><f6><esc>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "/install/vmlinuz",
+        " debian-installer=en_US auto locale=en_US kbd-chooser/method=us",
+        " hostname={{.Name}}",
+        " console-setup/ask_detect=false",
+        " console-setup/layoutcode=us",
+        " console-setup/modelcode=pc105",
+        " debconf/frontend=noninteractive",
+        " debian-installer=en_US",
+        " fb=false",
+        " initrd=/install/initrd.gz",
+        " kbd-chooser/method=us",
+        " keyboard-configuration/layout=USA",
+        " keyboard-configuration/variant=USA",
+        " net.ifnames=0",
+        " packer/httpip={{ .HTTPIP }}",
+        " packer/httpport={{ .HTTPPort }}",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg.{{build_name}}<wait>",
+        " -- <wait>",
+        "<enter><wait>"
+      ]
+    },
+    {
+      "name": "qemu",
+      "type": "qemu",
+      "communicator": "ssh",
+      "ssh_pty" : "false",
+      "format": "qcow2",
+      "headless": false,
+      "boot_wait": "10s",
+      "ssh_timeout": "20m",
+      "disk_interface": "virtio",
+      "disk_size": "20480",
+      "http_directory": "{{user `http_directory`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_wait_timeout": "60m",
+      "shutdown_command": "{{user `shutdown_command`}}",
+      "qemuargs": [
+        [ "-m", "768" ],
+        [ "-smp", "cpus=1"]
       ],
       "boot_command": [
         "<enter><wait><f6><esc>",
