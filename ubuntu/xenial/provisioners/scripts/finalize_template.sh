@@ -9,9 +9,6 @@ apt-get -y autoremove
 apt-get autoclean
 apt-get clean
 
-# Lock ubuntu
-passwd --delete ubuntu
-
 # Cleanup ssh
 shred -u /etc/ssh/*key* || true
 shred -u /root/.ssh/* || true
