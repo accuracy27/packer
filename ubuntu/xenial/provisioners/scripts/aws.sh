@@ -3,7 +3,6 @@ set -x
 set -e
 
 # Things only for aws
-# Things only for virtualbox
 PACKER_PROVISIONERS="/tmp/provisioners"
 PACKER_FILES="/tmp/provisioners/files"
 

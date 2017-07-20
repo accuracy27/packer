@@ -45,7 +45,8 @@ yes 2>&- | apt-get -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::
   uuid-runtime \
   ethtool \
   parted \
-  jq
+  jq \
+  cloud-init
 
 apt-get autoclean
 apt-get clean
