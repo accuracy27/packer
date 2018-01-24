@@ -48,5 +48,14 @@
       "/tmp/terraform-aws-nomad/modules/install-nomad/install-nomad --version {{user `nomad_version`}}"
     ],
     "pause_before": "30s"
+  },{
+    "type": "file",
+    "source": "{{template_dir}}/consul/encryption.json",
+    "destination": "/tmp/encryption.json"
+  },{
+    "type": "shell",
+    "inline": [
+      "sudo mv /tmp/encryption.json /opt/consul/config/encryption.json"
+    ]
   }]
 }
